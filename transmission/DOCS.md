@@ -6,22 +6,14 @@ This guide explains how to install, configure, and use the Transmission add-on. 
 
 Transmission is a BitTorrent client. It downloads and uploads torrent data.
 
-<<<<<<< HEAD
 The add-on gives Transmission two web-interface entry points:
-=======
-Home Assistant ingress is enabled on internal port `8099`. Transmission web access is also exposed on host port `9091`; use `http://HOME_ASSISTANT_HOST:9091/transmission/web/` from the local network. Do not expose port 9091 directly to the internet. The add-on does not publish a fixed peer port.
->>>>>>> 263d72c (feat: productionize VPN lifecycle)
 
 1. **Home Assistant ingress**: open the add-on and click **Open Web UI**. This is the recommended option because Home Assistant handles the connection for you.
 2. **Local port 9091**: open `http://HOME_ASSISTANT_HOST:9091/transmission/web/`, replacing `HOME_ASSISTANT_HOST` with the hostname or IP address of your Home Assistant machine.
 
 Port `9091` is for the web interface only. It is not the port that torrent peers use to connect to Transmission.
 
-<<<<<<< HEAD
 ## Install the add-on
-=======
-Use Proton OpenVPN credentials, not normal Proton account credentials. If `port_forwarding` is enabled, append `+pmp` to the OpenVPN username (for example, `username+pmp`). Proton assigns a different public port after reconnecting; the add-on refreshes the NAT-PMP lease, verifies it, and updates Transmission automatically. That assigned port is authoritative for TCP and UDP; HA host mappings do not control Proton ingress. Disable Transmission router UPnP/NAT-PMP mapping because Proton supplies the mapping.
->>>>>>> 263d72c (feat: productionize VPN lifecycle)
 
 1. In Home Assistant, open **Settings → Add-ons → Add-on store**.
 2. Click the three-dot menu in the top-right corner.
@@ -152,15 +144,7 @@ kill_switch: true
 
 The add-on requests a Proton NAT-PMP port for TCP and UDP, checks that both are the same, and updates Transmission automatically. Proton may assign a different port after reconnecting, so the number can change.
 
-<<<<<<< HEAD
 Important:
-=======
-- `openvpn_enabled`: Start Transmission only after the OpenVPN tunnel is up.
-- `kill_switch`: Stop Transmission when the tunnel goes down. Enabled by default.
-- `port_forwarding`: Request and renew Proton NAT-PMP TCP/UDP peer port.
-- `download_dir` and `incomplete_dir`: Must start with `/media` or `/share`.
-- `authentication_required`, `username`, `password`: Protect the Transmission RPC/web client. Authentication is enabled by default.
->>>>>>> 263d72c (feat: productionize VPN lifecycle)
 
 - Proton's assigned port is the authoritative torrent peer port.
 - The add-on does not expose a fixed host port such as `51413`.
@@ -169,20 +153,20 @@ Important:
 
 ## All configuration options
 
-| Option | What it does | Default |
-| --- | --- | --- |
-| `log_level` | Controls how much detail appears in the add-on log. Use `debug` when troubleshooting. | `info` |
-| `authentication_required` | Requires a username and password for the Transmission web interface and RPC API. | `true` |
-| `username` | Transmission web-interface/RPC username. | Empty |
-| `password` | Transmission web-interface/RPC password. | Empty |
-| `download_dir` | Folder for completed downloads. Must begin with `/media` or `/share`. | `/media/downloads` |
-| `incomplete_dir` | Folder for downloads that are not finished yet. Must begin with `/media` or `/share`. | `/media/incomplete` |
-| `openvpn_enabled` | Enables OpenVPN mode. Transmission starts after the tunnel is ready. | `false` |
-| `kill_switch` | Keeps Transmission stopped after a VPN disconnect until the VPN reconnects. | `true` |
-| `port_forwarding` | Requests and renews a Proton NAT-PMP torrent peer port. | `false` |
-| `openvpn_config` | Name of the `.ovpn` file. The file must exist in one of the locations described above. | Empty |
-| `openvpn_username` | Proton OpenVPN username. Add `+pmp` when using Proton port forwarding. | Empty |
-| `openvpn_password` | Proton OpenVPN password. | Empty |
+| Option                    | What it does                                                                           | Default             |
+| ------------------------- | -------------------------------------------------------------------------------------- | ------------------- |
+| `log_level`               | Controls how much detail appears in the add-on log. Use `debug` when troubleshooting.  | `info`              |
+| `authentication_required` | Requires a username and password for the Transmission web interface and RPC API.       | `true`              |
+| `username`                | Transmission web-interface/RPC username.                                               | Empty               |
+| `password`                | Transmission web-interface/RPC password.                                               | Empty               |
+| `download_dir`            | Folder for completed downloads. Must begin with `/media` or `/share`.                  | `/media/downloads`  |
+| `incomplete_dir`          | Folder for downloads that are not finished yet. Must begin with `/media` or `/share`.  | `/media/incomplete` |
+| `openvpn_enabled`         | Enables OpenVPN mode. Transmission starts after the tunnel is ready.                   | `false`             |
+| `kill_switch`             | Keeps Transmission stopped after a VPN disconnect until the VPN reconnects.            | `true`              |
+| `port_forwarding`         | Requests and renews a Proton NAT-PMP torrent peer port.                                | `false`             |
+| `openvpn_config`          | Name of the `.ovpn` file. The file must exist in one of the locations described above. | Empty               |
+| `openvpn_username`        | Proton OpenVPN username. Add `+pmp` when using Proton port forwarding.                 | Empty               |
+| `openvpn_password`        | Proton OpenVPN password.                                                               | Empty               |
 
 After changing any option, click **Save** and restart the add-on. Most configuration changes are applied during startup, not instantly.
 
@@ -205,11 +189,7 @@ Do not forward this port from your router to the public internet. Use a VPN or a
 
 ## Troubleshooting
 
-<<<<<<< HEAD
 ### The add-on will not start
-=======
-If VPN startup fails, verify the profile is a Proton P2P profile and credentials are OpenVPN credentials. If NAT-PMP fails, verify the username contains `+pmp` and the server supports port forwarding. If the tunnel drops, the kill switch intentionally stops Transmission until reconnect. If ingress works but port 9091 does not, verify the host port is free and the add-on port is exposed.
->>>>>>> 263d72c (feat: productionize VPN lifecycle)
 
 Open **Settings → Add-ons → Transmission → Log** and read the first error, not just the final line saying that the service stopped.
 
