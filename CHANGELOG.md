@@ -24,12 +24,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Hardened Proton NAT-PMP renewal, RPC verification, VPN hook ownership, kill-switch recovery, and health checks.
+<<<<<<< HEAD
 - Rewritten the README and add-on guide with step-by-step setup, option explanations, and troubleshooting.
+=======
+>>>>>>> 263d72c (feat: productionize VPN lifecycle)
 
 ### Changed
 
 - Removed fixed 51413 host mappings; Proton's assigned peer port is authoritative.
 - Enabled Transmission RPC authentication by default.
+<<<<<<< HEAD
+- Disabled Transmission's built-in port forwarding so Proton NAT-PMP forwarding remains authoritative.
+=======
+>>>>>>> 263d72c (feat: productionize VPN lifecycle)
 - Disabled Transmission's built-in port forwarding so Proton NAT-PMP forwarding remains authoritative.
 - Documented the requirement to update this changelog with every version, commit, and push.
 - Maintained multi-path OpenVPN configuration support.
