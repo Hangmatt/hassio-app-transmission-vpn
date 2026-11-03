@@ -39,3 +39,11 @@ Every version change, commit, and push must be represented in `CHANGELOG.md`. Ad
 ## Security & Configuration Tips
 
 Never commit VPN credentials, private certificates, or generated secrets. Treat changes to `privileged`, `/dev/net/tun`, port mappings, and writable volume mappings as security-sensitive and explain their necessity in the PR.
+
+## Weekly maintenance workflow
+
+```sh
+gh issue list --state open --json number,title,url --limit 50 > issues.json
+```
+
+When selecting tasks for Plans.md, start with the issues file.
