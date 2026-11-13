@@ -9,17 +9,23 @@ fi
 bashio::net.wait_for 9091
 while true; do
     bashio::log.info 'Requesting Proton VPN NAT-PMP port'
-    output=$(natpmpc -a 1 0 udp 60 -g "${GATEWAY}" 2>&1) || {
-        bashio::log.error "NAT-PMP UDP request failed: ${output}"
-        exit 1
-    }
-    tcp_output=$(natpmpc -a 1 0 tcp 60 -g "${GATEWAY}" 2>&1) || {
-        bashio::log.error "NAT-PMP TCP request failed: ${tcp_output}"
-        exit 1
-    }
+    output=$(timeout 10 natpmpc -a 1 0 udp 60 -g "${GATEWAY}" 2>&1) || output=''
+    tcp_output=$(timeout 10 natpmpc -a 1 0 tcp 60 -g "${GATEWAY}" 2>&1) || tcp_output=''
 
-    port=$(printf '%s\n%s\n' "${output}" "${tcp_output}" | sed -nE 's/.*Mapped public port ([0-9]+).*/\1/p' | head -n 1)
-    if [[ -n "${port}" ]]; then
+    udp_port=$(printf '%s\n' "${output}" | sed -nE 's/.*Mapped public port ([0-9]+).*/\1/p' | tail -n 1)
+    tcp_port=$(printf '%s\n' "${tcp_output}" | sed -nE 's/.*Mapped public port ([0-9]+).*/\1/p' | tail -n 1)
+    if [[ -z "${udp_port}" || -z "${tcp_port}" ]]; then
+        bashio::log.warning 'Proton NAT-PMP lease failed; retrying'
+        sleep 5
+        continue
+    fi
+    if [[ "${udp_port}" != "${tcp_port}" ]]; then
+        bashio::log.error "Proton returned different TCP (${tcp_port}) and UDP (${udp_port}) ports"
+        sleep 60
+        continue
+    fi
+    port="${tcp_port}"
+    if [[ ! -r /run/proton-forwarded-port || "$(cat /run/proton-forwarded-port)" != "${port}" ]]; then
         auth_args=()
         if [[ -n "${RPC_AUTH}" ]]; then
             auth_args=(-u "${RPC_AUTH}")
@@ -29,12 +35,23 @@ while true; do
             http://127.0.0.1:9091/transmission/rpc \
             -o /dev/null | awk 'tolower($1) == "x-transmission-session-id:" {print $2}' | tr -d '\r')
         if [[ -n "${session_id}" ]]; then
-            curl --silent --show-error --fail \
+            curl --silent --show-error --fail --max-time 5 \
                 "${auth_args[@]}" \
                 -H "X-Transmission-Session-Id: ${session_id}" \
                 -H 'Content-Type: application/json' \
                 --data "{\"method\":\"session-set\",\"arguments\":{\"peer-port\":${port}}}" \
-                http://127.0.0.1:9091/transmission/rpc >/dev/null
+                http://127.0.0.1:9091/transmission/rpc >/dev/null &&
+            verified=$(curl --silent --show-error --fail --max-time 5 \
+                "${auth_args[@]}" -H "X-Transmission-Session-Id: ${session_id}" \
+                -H 'Content-Type: application/json' \
+                --data '{"method":"session-get"}' \
+                http://127.0.0.1:9091/transmission/rpc |
+                sed -nE 's/.*"peer-port":([0-9]+).*/\1/p')
+            if [[ "${verified:-}" == "${port}" ]]; then
+                printf '%s\n' "${port}" > /run/proton-forwarded-port
+            else
+                bashio::log.warning "Transmission peer-port verification failed (expected ${port}, got ${verified:-unknown})"
+            fi
         else
             bashio::log.warning 'Could not obtain Transmission RPC session ID'
         fi

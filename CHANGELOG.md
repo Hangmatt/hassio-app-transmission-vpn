@@ -21,11 +21,30 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Hardened Proton NAT-PMP renewal, RPC verification, VPN hook ownership, kill-switch recovery, and health checks.
+- Rewritten the README and add-on guide with step-by-step setup, option explanations, and troubleshooting.
+
 ### Changed
 
+- Removed fixed 51413 host mappings; Proton's assigned peer port is authoritative.
+- Enabled Transmission RPC authentication by default.
+- Disabled Transmission's built-in port forwarding so Proton NAT-PMP forwarding remains authoritative.
+- Documented the requirement to update this changelog with every version, commit, and push.
 - Maintained multi-path OpenVPN configuration support.
 - Maintained restrictive permissions for generated VPN credentials.
 - Updated repository and add-on metadata for the Hangmatt fork.
+
+## [1.4.0] - 2026-11-01
+
+### Added
+
+- Production VPN healthcheck and CI validation workflow.
+
+### Changed
+
+- Made Proton's assigned NAT-PMP port authoritative and hardened reconnect handling.
 
 ## [1.2.0] - 2018-08-24
 

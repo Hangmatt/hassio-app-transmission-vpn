@@ -28,7 +28,13 @@ if bashio::config.true 'openvpn_enabled'; then
   fi
 
   bashio::log.info "Using OpenVPN configuration file: ${ovpn_file}"
-  cp "${ovpn_file}" /etc/openvpn/config.ovpn
+  sed -E '/^[[:space:]]*(up|down|route-pre-down)[[:space:]]/d' "${ovpn_file}" > /etc/openvpn/config.ovpn
+  cat >> /etc/openvpn/config.ovpn <<'EOF'
+up /etc/openvpn/up.sh
+down-pre
+route-pre-down /etc/openvpn/route-pre-down.sh
+down /etc/openvpn/down.sh
+EOF
 
   openvpn_username=$(bashio::config 'openvpn_username')
   echo "${openvpn_username}" > /etc/openvpn/credentials

@@ -14,6 +14,10 @@ if bashio::config.true 'authentication_required'; then
     fi
 fi
 
+if bashio::config.true 'port_forwarding' && ! bashio::config.true 'openvpn_enabled'; then
+    bashio::exit.nok 'Port forwarding requires OpenVPN to be enabled'
+fi
+
 # Check OpenVPN requirements, if enabled
 if bashio::config.true 'openvpn_enabled'; then
     declare openvpn_username

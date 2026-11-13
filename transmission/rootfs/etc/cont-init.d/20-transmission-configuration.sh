@@ -27,6 +27,8 @@ CONFIG=$(bashio::jq "${CONFIG}" ".\"download-dir\"=\"${download_dir}\"")
 CONFIG=$(bashio::jq "${CONFIG}" ".\"rpc-whitelist-enabled\"=false")
 CONFIG=$(bashio::jq "${CONFIG}" ".\"rpc-host-whitelist-enabled\"=false")
 CONFIG=$(bashio::jq "${CONFIG}" ".\"bind-address-ipv4\"=\"0.0.0.0\"")
+CONFIG=$(bashio::jq "${CONFIG}" ".\"port-forwarding-enabled\"=false")
+CONFIG=$(bashio::jq "${CONFIG}" ".\"peer-port-random-on-start\"=false")
 
 authentication_required=$(bashio::config 'authentication_required')
 CONFIG=$(bashio::jq "${CONFIG}" ".\"rpc-authentication-required\"=${authentication_required}")

@@ -1,6 +1,6 @@
 {
     "name": "Transmission",
-    "version": "1.3.1",
+    "version": "1.4.1",
     "slug": "transmission",
     "description": "The torrent client for Hass.io with OpenVPN support",
     "url": "https://github.com/Hangmatt/hassio-addon-transmission",
@@ -28,8 +28,8 @@
     },
     "ports_description": {
         "9091/tcp": "Web UI port (Not required for Hass.io Ingress)",
-        "51413/tcp": "Peer port (setup port forwarding to this port)",
-        "51413/udp": "Peer port (setup port forwarding to this port)"
+        "51413/tcp": "Torrent port (TCP)",
+        "51413/udp": "Torrent port (UDP)"
     },
     "privileged": [
         "NET_ADMIN"
@@ -42,11 +42,12 @@
     "host_network": false,
     "options": {
         "log_level": "info",
-        "authentication_required": false,
+        "authentication_required": true,
         "username": "",
         "password": "",
         "download_dir": "/media/downloads",
         "incomplete_dir": "/media/incomplete",
+        "local_port_forwarding": false,
         "openvpn_enabled": false,
         "kill_switch": true,
         "port_forwarding": false,
@@ -61,6 +62,7 @@
         "password": "str",
         "download_dir": "match(^\/(share|media))",
         "incomplete_dir": "match(^\/(share|media))",
+        "local_port_forwarding": "bool",
         "openvpn_enabled": "bool",
         "kill_switch": "bool",
         "port_forwarding": "bool",

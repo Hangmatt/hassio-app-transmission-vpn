@@ -17,6 +17,7 @@ After this change, users can install the repository as a Home Assistant add-on, 
 - [x] (2026-11-01) Ran disposable Transmission runtime smoke test; web UI returned HTTP 200 through published host port 9091.
 - [x] (2026-11-01) Ran disposable Transmission RPC smoke test; `session-set` changed and `session-get` confirmed peer port 49123.
 - [x] (2026-11-01) Made OpenVPN reconnect startup idempotent and rebuilt image successfully.
+- [x] (2026-11-01) Hardened NAT-PMP renewal and RPC verification, normalized provider hooks, removed misleading peer-port mappings, and enabled secure RPC defaults.
 
 ## Surprises & Discoveries
 

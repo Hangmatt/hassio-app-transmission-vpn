@@ -34,6 +34,8 @@ No automated unit or coverage requirements are currently defined. For behavior c
 
 Existing history uses short, imperative-style messages such as `update`; keep commits focused and describe the user-visible change when possible. Discuss substantial work in an issue first. PRs should explain the change, list validation performed, and call out configuration, security, or migration impacts. Search existing issues and PRs before opening a duplicate. Obtain two developer approvals before merging, as required by `CONTRIBUTING.md`.
 
+Every version change, commit, and push must be represented in `CHANGELOG.md`. Add the changelog entry in the same commit as the implementation or release metadata, and update it before pushing. Use the current version heading for release changes; for non-release commits, add a concise entry under an `Unreleased` heading (or create one). Never push a repository change with an undocumented user-visible effect.
+
 ## Security & Configuration Tips
 
 Never commit VPN credentials, private certificates, or generated secrets. Treat changes to `privileged`, `/dev/net/tun`, port mappings, and writable volume mappings as security-sensitive and explain their necessity in the PR.

@@ -1,0 +1,19 @@
+name: Validate add-on
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON
+        run: jq empty transmission/config.json
+      - name: Validate shell syntax
+        run: bash -n transmission/rootfs/etc/cont-init.d/*.sh transmission/rootfs/etc/openvpn/*.sh transmission/rootfs/etc/services.d/*/run transmission/rootfs/etc/healthcheck.sh
+      - name: Validate whitespace
+        run: git diff --check
+      - name: Build add-on image
+        run: docker build --tag transmission-addon:ci transmission/
