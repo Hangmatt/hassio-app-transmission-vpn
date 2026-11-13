@@ -147,9 +147,25 @@ The add-on requests a Proton NAT-PMP port for TCP and UDP, checks that both are 
 Important:
 
 - Proton's assigned port is the authoritative torrent peer port.
-- The add-on does not expose a fixed host port such as `51413`.
+- When `local_port_forwarding` is enabled, `51413` is used as the local fallback peer port; Proton's assigned port takes over while port forwarding is active.
 - Disable Transmission's own router UPnP/NAT-PMP port mapping. The add-on already disables it so that it cannot fight with Proton's mapping.
 - `port_forwarding: true` without a suitable Proton plan, P2P server, and `+pmp` username will fail. This is expected, not mysterious.
+
+### Use local peer port forwarding
+
+Set `local_port_forwarding: true` to make Transmission use the fixed peer port `51413` when OpenVPN is disabled:
+
+```yaml
+openvpn_enabled: false
+local_port_forwarding: true
+port_forwarding: false
+```
+
+On startup, the add-on writes `peer-port: 51413` to Transmission's `settings.json`, replacing any previously saved peer port.
+
+The add-on maps TCP and UDP `51413` to the Home Assistant host. To accept peers from outside your home network, also forward both protocols on your router to that host. This setting configures Transmission's listening port; it does not configure your router.
+
+When OpenVPN and Proton port forwarding are enabled, Proton's assigned peer port overrides `51413` while its forwarding lease is active. The fixed port remains the local fallback.
 
 ## All configuration options
 
@@ -161,6 +177,7 @@ Important:
 | `password`                | Transmission web-interface/RPC password.                                               | Empty               |
 | `download_dir`            | Folder for completed downloads. Must begin with `/media` or `/share`.                  | `/media/downloads`  |
 | `incomplete_dir`          | Folder for downloads that are not finished yet. Must begin with `/media` or `/share`.  | `/media/incomplete` |
+| `local_port_forwarding`   | Uses the fixed peer port `51413` as the local fallback when enabled.                   | `false`             |
 | `openvpn_enabled`         | Enables OpenVPN mode. Transmission starts after the tunnel is ready.                   | `false`             |
 | `kill_switch`             | Keeps Transmission stopped after a VPN disconnect until the VPN reconnects.            | `true`              |
 | `port_forwarding`         | Requests and renews a Proton NAT-PMP torrent peer port.                                | `false`             |

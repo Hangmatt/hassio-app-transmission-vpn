@@ -36,8 +36,8 @@ For VPN setup, folder locations, configuration options, and troubleshooting, rea
 - Home Assistant ingress is the easiest and safest way to open the web interface.
 - Optional local access uses TCP port `9091` and the URL `http://HOME_ASSISTANT_HOST:9091/transmission/web/`.
 - Port `9091` is the **web interface**, not the torrent peer port.
-- This add-on does not publish a fixed torrent peer port such as `51413`.
-- With Proton port forwarding enabled, Proton assigns the peer port dynamically. That assigned port is used for both TCP and UDP and is the only peer port that matters.
+- With `local_port_forwarding` enabled, the add-on uses fixed peer port `51413` for local forwarding when VPN is disabled.
+- With Proton port forwarding enabled, Proton assigns the peer port dynamically. That assigned port is used for both TCP and UDP while VPN is active.
 - Do not expose port `9091` directly to the internet.
 
 ## Support

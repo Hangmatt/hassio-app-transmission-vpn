@@ -7,6 +7,7 @@ declare username
 declare password
 declare download_dir
 declare incomplete_dir
+declare local_peer_port
 
 if ! bashio::fs.directory_exists '/data/transmission'; then
   mkdir '/data/transmission'
@@ -29,6 +30,10 @@ CONFIG=$(bashio::jq "${CONFIG}" ".\"rpc-host-whitelist-enabled\"=false")
 CONFIG=$(bashio::jq "${CONFIG}" ".\"bind-address-ipv4\"=\"0.0.0.0\"")
 CONFIG=$(bashio::jq "${CONFIG}" ".\"port-forwarding-enabled\"=false")
 CONFIG=$(bashio::jq "${CONFIG}" ".\"peer-port-random-on-start\"=false")
+if bashio::config.true 'local_port_forwarding'; then
+  local_peer_port="${TRANSMISSION_PEER_PORT:-51413}"
+  CONFIG=$(bashio::jq "${CONFIG}" ".\"peer-port\"=${local_peer_port}")
+fi
 
 authentication_required=$(bashio::config 'authentication_required')
 CONFIG=$(bashio::jq "${CONFIG}" ".\"rpc-authentication-required\"=${authentication_required}")

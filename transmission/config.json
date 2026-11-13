@@ -71,6 +71,7 @@
         "openvpn_password": "str"
     },
     "environment": {
-        "LOG_FORMAT": "{LEVEL}: {MESSAGE}"
+        "LOG_FORMAT": "{LEVEL}: {MESSAGE}",
+        "TRANSMISSION_PEER_PORT": "51413"
     }
 }

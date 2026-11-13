@@ -1,12 +1,17 @@
 #!/usr/bin/with-contenv bashio
 # ==============================================================================
 declare CONFIG
+declare local_peer_port
 
 CONFIG=$(</data/transmission/settings.json)
 
 CONFIG=$(bashio::jq "${CONFIG}" ".\"bind-address-ipv4\"=\"${1}\"")
 CONFIG=$(bashio::jq "${CONFIG}" ".\"peer-port-random-on-start\"=false")
 CONFIG=$(bashio::jq "${CONFIG}" ".\"port-forwarding-enabled\"=false")
+if bashio::config.true 'local_port_forwarding'; then
+    local_peer_port="${TRANSMISSION_PEER_PORT:-51413}"
+    CONFIG=$(bashio::jq "${CONFIG}" ".\"peer-port\"=${local_peer_port}")
+fi
 
 echo "${CONFIG}" > /data/transmission/settings.json
 
