@@ -161,7 +161,11 @@ local_port_forwarding: true
 port_forwarding: false
 ```
 
+<<<<<<< HEAD
 On startup, the add-on writes `peer-port: 51413` to Transmission's `settings.json`, replacing any previously saved peer port.
+=======
+On startup, the add-on writes `peer-port: 51413` to `/data/transmission/settings.json`, replacing any previously saved peer port.
+>>>>>>> 569ba2c (local port --continued--)
 
 The add-on maps TCP and UDP `51413` to the Home Assistant host. To accept peers from outside your home network, also forward both protocols on your router to that host. This setting configures Transmission's listening port; it does not configure your router.
 
