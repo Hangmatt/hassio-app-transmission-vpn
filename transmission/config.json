@@ -22,9 +22,7 @@
     ],
     "boot": "auto",
     "ports": {
-        "9091/tcp": null,
-        "51413/tcp": 51413,
-        "51413/udp": 51413
+        "9091/tcp": null
     },
     "ports_description": {
         "9091/tcp": "Web UI port (Not required for Hass.io Ingress)",

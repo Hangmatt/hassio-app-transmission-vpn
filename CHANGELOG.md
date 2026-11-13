@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added fixed TCP/UDP 51413 host mappings for local peer forwarding; Proton's assigned port remains authoritative while VPN forwarding is active.
 - Set Transmission's peer port to the configured local default when `local_port_forwarding` is enabled.
+- Removed fixed 51413 host mappings; Proton's assigned peer port is authoritative.
 - Enabled Transmission RPC authentication by default.
 - Disabled Transmission's built-in port forwarding so Proton NAT-PMP forwarding remains authoritative.
 - Documented the requirement to update this changelog with every version, commit, and push.
