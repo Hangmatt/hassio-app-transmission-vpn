@@ -3,7 +3,7 @@
 if bashio::config.true 'kill_switch'; then
     auth_args=()
     if bashio::config.true 'authentication_required'; then
-        auth_args=(-n "$(bashio::config 'username'):$(bashio::config 'password')")
+        auth_args=(-n "$(bashio::config '["WebUI Login"].username'):$(bashio::config '["WebUI Login"].password')")
     fi
     session_id=$(curl --silent --show-error --max-time 5 --dump-header - \
         "${auth_args[@]}" http://127.0.0.1:9091/transmission/rpc -o /dev/null |

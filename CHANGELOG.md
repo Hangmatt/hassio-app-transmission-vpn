@@ -28,6 +28,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+- Read nested web UI and OpenVPN credentials from their declared options.
+- Use `local-port` consistently for Transmission's local peer port, including VPN reconnects.
+- Map the web UI host port by default and add the missing UDP peer-port mapping.
+- Use the Home Assistant host address for the health check.
+- Correct the app configuration mount type to `app_config`.
+- Stop tracking the local Transmission settings file.
 - Added fixed TCP/UDP 51413 host mappings for local peer forwarding; Proton's assigned port remains authoritative while VPN forwarding is active.
 - Set Transmission's peer port to the configured local default when `local_port_forwarding` is enabled.
 - Removed fixed 51413 host mappings; Proton's assigned peer port is authoritative.

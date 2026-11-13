@@ -22,6 +22,9 @@ CONFIG=$(</data/transmission/settings.json)
 # Defaults
 incomplete_dir=$(bashio::config 'incomplete_dir')
 download_dir=$(bashio::config 'download_dir')
+authentication_required=$(bashio::config 'authentication_required')
+username=$(bashio::config '["WebUI Login"].username')
+password=$(bashio::config '["WebUI Login"].password')
 CONFIG=$(bashio::jq "${CONFIG}" ".\"incomplete-dir\"=\"${incomplete_dir}\"")
 CONFIG=$(bashio::jq "${CONFIG}" ".\"incomplete-dir-enabled\"=true")
 CONFIG=$(bashio::jq "${CONFIG}" ".\"download-dir\"=\"${download_dir}\"")
@@ -31,19 +34,11 @@ CONFIG=$(bashio::jq "${CONFIG}" ".\"bind-address-ipv4\"=\"0.0.0.0\"")
 CONFIG=$(bashio::jq "${CONFIG}" ".\"port-forwarding-enabled\"=false")
 CONFIG=$(bashio::jq "${CONFIG}" ".\"peer-port-random-on-start\"=false")
 if bashio::config.true 'local_port_forwarding'; then
-  local_peer_port="${TRANSMISSION_PEER_PORT:-51413}"
-  CONFIG=$(bashio::jq "${CONFIG}" ".\"peer-port\"=${local_peer_port}")
+    local_peer_port=$(bashio::config '["local-port"]')
+    CONFIG=$(bashio::jq "${CONFIG}" ".\"peer-port\"=${local_peer_port}")
 fi
-
-authentication_required=$(bashio::config 'authentication_required')
 CONFIG=$(bashio::jq "${CONFIG}" ".\"rpc-authentication-required\"=${authentication_required}")
-
-
-username=$(bashio::config 'username')
 CONFIG=$(bashio::jq "${CONFIG}" ".\"rpc-username\"=\"${username}\"")
-
-
-password=$(bashio::config 'password')
 CONFIG=$(bashio::jq "${CONFIG}" ".\"rpc-password\"=\"${password}\"")
 
 echo "${CONFIG}" > /data/transmission/settings.json
