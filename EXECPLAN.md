@@ -66,6 +66,10 @@ Configuration generation must preserve user settings while updating managed fiel
 
 Current evidence is the repository audit recorded above. Runtime proof requires a Proton paid plan, P2P profile, and Home Assistant host with `/dev/net/tun` access.
 
+## Follow-up
+
+- [ ] Make `log_level` effective by mapping its named values to Bashio's numeric `LOG_LEVEL`, or remove the unused option and migrate existing settings.
+
 ## Interfaces and Dependencies
 
 The image uses the Home Assistant add-on base image, `bashio`, `openvpn`, `transmission-daemon`, `nginx`, and Alpine's NAT-PMP client. Managed files include `/data/transmission/settings.json`, `/etc/openvpn/config.ovpn`, and `/etc/openvpn/credentials`; secrets stay in add-on options or mounted configuration, never in Git.

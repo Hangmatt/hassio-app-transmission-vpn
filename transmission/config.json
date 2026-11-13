@@ -17,7 +17,7 @@
     ],
     "map": [
         {
-            "type": "share",
+            "type": "app_config",
             "read_only": false
         },
         {
@@ -34,12 +34,14 @@
     ],
     "boot": "auto",
     "ports": {
-        "9091/tcp": null,
-        "51413/tcp": "51413"
+        "9091/tcp": "9091",
+        "51413/tcp": "51413",
+        "51413/udp": "51413"
     },
     "ports_description": {
         "9091/tcp": "Web UI port (Not required for Hass.io Ingress)",
-        "51413/tcp": "Torrent port"
+        "51413/tcp": "Torrent port",
+        "51413/udp": "Torrent port"
     },
     "privileged": [
         "NET_ADMIN"
@@ -53,35 +55,44 @@
     "options": {
         "log_level": "info",
         "authentication_required": true,
-        "username": "",
-        "password": "",
+        "WebUI Login": {
+            "username": "",
+            "password": ""
+        },
         "download_dir": "/media/downloads",
         "incomplete_dir": "/media/incomplete",
         "local_port_forwarding": false,
+        "local-port": 51413,
         "openvpn_enabled": false,
         "kill_switch": true,
         "port_forwarding": false,
         "openvpn_config": "",
-        "openvpn_username": "",
-        "openvpn_password": ""
+        "openvpn credentials": {
+            "openvpn_username": "",
+            "openvpn_password": ""
+        }
     },
     "schema": {
-        "log_level": "match(^(trace|debug|info|notice|warning|error|fatal)$)",
+        "log_level": "list(trace|debug|info|notice|warning|error|fatal)",
         "authentication_required": "bool",
-        "username": "str",
-        "password": "str",
+        "WebUI Login": {
+            "username": "str",
+            "password": "password"
+        },
         "download_dir": "match(^\/(share|media))",
         "incomplete_dir": "match(^\/(share|media))",
         "local_port_forwarding": "bool",
+        "local-port": "port",
         "openvpn_enabled": "bool",
         "kill_switch": "bool",
         "port_forwarding": "bool",
         "openvpn_config": "str",
-        "openvpn_username": "str",
-        "openvpn_password": "str"
+        "openvpn credentials": {
+            "openvpn_username": "str",
+            "openvpn_password": "password"
+        }
     },
     "environment": {
-        "LOG_FORMAT": "{LEVEL}: {MESSAGE}",
-        "TRANSMISSION_PEER_PORT": "51413"
+        "LOG_FORMAT": "{LEVEL}: {MESSAGE}"
     }
 }

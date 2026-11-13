@@ -4,7 +4,7 @@ set -u
 GATEWAY="10.2.0.1"
 RPC_AUTH=''
 if bashio::config.true 'authentication_required'; then
-    RPC_AUTH="$(bashio::config 'username'):$(bashio::config 'password')"
+    RPC_AUTH="$(bashio::config '["WebUI Login"].username'):$(bashio::config '["WebUI Login"].password')"
 fi
 bashio::net.wait_for 9091
 while true; do

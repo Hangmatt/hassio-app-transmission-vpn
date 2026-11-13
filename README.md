@@ -18,6 +18,8 @@ The add-on provides:
 
 ## Quick start
 
+[![Open your Home Assistant instance and show the add app repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https://github.com/Hangmatt/hassio-addon-transmission)
+
 1. Open **Settings → Add-ons → Add-on store** in Home Assistant.
 2. Open the three-dot menu and choose **Repositories**.
 3. Add this repository:
@@ -34,9 +36,9 @@ For VPN setup, folder locations, configuration options, and troubleshooting, rea
 ## Important network facts
 
 - Home Assistant ingress is the easiest and safest way to open the web interface.
-- Optional local access uses TCP port `9091` and the URL `http://HOME_ASSISTANT_HOST:9091/transmission/web/`.
 - Port `9091` is the **web interface**, not the torrent peer port.
-- With `local_port_forwarding` enabled, the add-on uses fixed peer port `51413` for local forwarding when VPN is disabled.
+- Local access is mapped to TCP port `9091` by default: `http://HOME_ASSISTANT_HOST:9091/transmission/web/`.
+- With `local_port_forwarding` enabled, the add-on uses `local-port` as Transmission's peer port. Default: `51413`.
 - With Proton port forwarding enabled, Proton assigns the peer port dynamically. That assigned port is used for both TCP and UDP while VPN is active.
 - Do not expose port `9091` directly to the internet.
 

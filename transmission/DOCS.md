@@ -34,8 +34,9 @@ Open the add-on's **Configuration** tab and set at least these values:
 
 ```yaml
 authentication_required: true
-username: transmission
-password: choose-a-long-unique-password
+"WebUI Login":
+  username: transmission
+  password: choose-a-long-unique-password
 download_dir: /media/downloads
 incomplete_dir: /media/incomplete
 openvpn_enabled: false
@@ -111,8 +112,9 @@ Use configuration like this:
 ```yaml
 openvpn_enabled: true
 openvpn_config: nl-free-123.protonvpn.udp.ovpn
-openvpn_username: your_openvpn_username
-openvpn_password: your_openvpn_password
+"openvpn credentials":
+  openvpn_username: your_openvpn_username
+  openvpn_password: your_openvpn_password
 kill_switch: true
 port_forwarding: false
 ```
@@ -136,8 +138,9 @@ Set `port_forwarding: true` and add `+pmp` to the Proton OpenVPN username:
 ```yaml
 openvpn_enabled: true
 openvpn_config: nl-free-123.protonvpn.udp.ovpn
-openvpn_username: your_openvpn_username+pmp
-openvpn_password: your_openvpn_password
+"openvpn credentials":
+  openvpn_username: your_openvpn_username+pmp
+  openvpn_password: your_openvpn_password
 port_forwarding: true
 kill_switch: true
 ```
@@ -147,25 +150,26 @@ The add-on requests a Proton NAT-PMP port for TCP and UDP, checks that both are 
 Important:
 
 - Proton's assigned port is the authoritative torrent peer port.
-- When `local_port_forwarding` is enabled, `51413` is used as the local fallback peer port; Proton's assigned port takes over while port forwarding is active.
+- When `local_port_forwarding` is enabled, `local-port` is used as the local fallback peer port; Proton's assigned port takes over while port forwarding is active.
 - Disable Transmission's own router UPnP/NAT-PMP port mapping. The add-on already disables it so that it cannot fight with Proton's mapping.
 - `port_forwarding: true` without a suitable Proton plan, P2P server, and `+pmp` username will fail. This is expected, not mysterious.
 
 ### Use local peer port forwarding
 
-Set `local_port_forwarding: true` to make Transmission use the fixed peer port `51413` when OpenVPN is disabled:
+Set `local_port_forwarding: true` to make Transmission use `local-port` as its local peer port. The default is `51413`:
 
 ```yaml
 openvpn_enabled: false
 local_port_forwarding: true
+local-port: 51413
 port_forwarding: false
 ```
 
-On startup, the add-on writes `peer-port: 51413` to Transmission's `settings.json`, replacing any previously saved peer port.
+On startup and after an OpenVPN reconnect, the add-on writes `local-port` to Transmission's `settings.json`, replacing any previously saved peer port.
 
-The add-on maps TCP and UDP `51413` to the Home Assistant host. To accept peers from outside your home network, also forward both protocols on your router to that host. This setting configures Transmission's listening port; it does not configure your router.
+By default, the add-on maps TCP and UDP `51413` to the Home Assistant host. If you change `local-port`, also change the corresponding container-port keys in `transmission/config.json` and rebuild the app; changing only the host port in Network settings is not enough. To accept peers from outside your home network, also forward both protocols on your router to that host.
 
-When OpenVPN and Proton port forwarding are enabled, Proton's assigned peer port overrides `51413` while its forwarding lease is active. The fixed port remains the local fallback.
+When OpenVPN and Proton port forwarding are enabled, Proton's assigned peer port overrides `local-port` while its forwarding lease is active. The configured local port remains the fallback.
 
 ## All configuration options
 
@@ -173,26 +177,27 @@ When OpenVPN and Proton port forwarding are enabled, Proton's assigned peer port
 | ------------------------- | -------------------------------------------------------------------------------------- | ------------------- |
 | `log_level`               | Controls how much detail appears in the add-on log. Use `debug` when troubleshooting.  | `info`              |
 | `authentication_required` | Requires a username and password for the Transmission web interface and RPC API.       | `true`              |
-| `username`                | Transmission web-interface/RPC username.                                               | Empty               |
-| `password`                | Transmission web-interface/RPC password.                                               | Empty               |
+| `WebUI Login.username`    | Transmission web-interface/RPC username.                                               | Empty               |
+| `WebUI Login.password`    | Transmission web-interface/RPC password.                                               | Empty               |
 | `download_dir`            | Folder for completed downloads. Must begin with `/media` or `/share`.                  | `/media/downloads`  |
 | `incomplete_dir`          | Folder for downloads that are not finished yet. Must begin with `/media` or `/share`.  | `/media/incomplete` |
-| `local_port_forwarding`   | Uses the fixed peer port `51413` as the local fallback when enabled.                   | `false`             |
+| `local_port_forwarding`   | Sets the Transmission peer port to `local-port` as the local fallback.                 | `false`             |
+| `local-port`              | Transmission's local peer listening port; must match its mapped container port.       | `51413`             |
 | `openvpn_enabled`         | Enables OpenVPN mode. Transmission starts after the tunnel is ready.                   | `false`             |
 | `kill_switch`             | Keeps Transmission stopped after a VPN disconnect until the VPN reconnects.            | `true`              |
 | `port_forwarding`         | Requests and renews a Proton NAT-PMP torrent peer port.                                | `false`             |
 | `openvpn_config`          | Name of the `.ovpn` file. The file must exist in one of the locations described above. | Empty               |
-| `openvpn_username`        | Proton OpenVPN username. Add `+pmp` when using Proton port forwarding.                 | Empty               |
-| `openvpn_password`        | Proton OpenVPN password.                                                               | Empty               |
+| `openvpn credentials.openvpn_username` | Proton OpenVPN username. Add `+pmp` when using Proton port forwarding.     | Empty               |
+| `openvpn credentials.openvpn_password` | Proton OpenVPN password.                                                   | Empty               |
 
 After changing any option, click **Save** and restart the add-on. Most configuration changes are applied during startup, not instantly.
 
 ## Access from the local network
 
-To use the optional host port:
+Host access on port `9091` is mapped by default. The health check requires this mapping to stay enabled.
 
 1. Open the add-on **Configuration** tab.
-2. Make sure the add-on's port `9091` is mapped to a free host port. The default mapping is usually `9091` to `9091`.
+2. Make sure the add-on's port `9091` is mapped to a free host port. The default mapping is `9091` to `9091`.
 3. Start or restart the add-on.
 4. Visit:
 

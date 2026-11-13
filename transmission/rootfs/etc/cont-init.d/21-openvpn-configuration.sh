@@ -36,9 +36,9 @@ route-pre-down /etc/openvpn/route-pre-down.sh
 down /etc/openvpn/down.sh
 EOF
 
-  openvpn_username=$(bashio::config 'openvpn_username')
+  openvpn_username=$(bashio::config '["openvpn credentials"].openvpn_username')
   echo "${openvpn_username}" > /etc/openvpn/credentials
-  openvpn_password=$(bashio::config 'openvpn_password')
+  openvpn_password=$(bashio::config '["openvpn credentials"].openvpn_password')
   echo "${openvpn_password}" >> /etc/openvpn/credentials
   chmod 600 /etc/openvpn/credentials
 
