@@ -1,10 +1,10 @@
-ARG BUILD_FROM="ghcr.io/hassio-addons/base:21.0.10"
+FROM ghcr.io/hassio-addons/base:21.0.10 AS base
 # hadolint ignore=DL3006
-FROM ${BUILD_FROM}
 
 # Copy root filesystem
 COPY rootfs /
 
+FROM base AS setup
 # Setup base
 RUN apk add --no-cache \
     coreutils \
@@ -13,9 +13,11 @@ RUN apk add --no-cache \
     nginx \
     transmission-cli \
     transmission-daemon \
+    transmission-remote \
     openvpn \
     && chmod -R +x /etc/cont-init.d /etc/services.d /etc/openvpn/*.sh /etc/healthcheck.sh
 
+FROM setup AS runtime
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 CMD ["/etc/healthcheck.sh"]
 
 # Build arugments

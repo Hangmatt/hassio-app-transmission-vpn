@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.4.4]
+
+### Added
+
+- experiment to auto-update the peer-port after launching transmission-daemon with the VPN running on router
+
+### Changed
+
+- removed build.json & integrated these options in Dockerfile
+
 ## [1.3.1] - 2026-11-01
 
 ### Fixed

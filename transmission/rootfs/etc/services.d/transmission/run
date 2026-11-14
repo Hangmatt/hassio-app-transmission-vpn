@@ -12,4 +12,7 @@ if bashio::config.true 'openvpn_enabled'; then
         --ping-restart 60
 else
     exec /usr/bin/transmission-daemon --foreground --config-dir /data/transmission
+    exec /data/scripts/port.sh 2>&1 | while IFS= read -r line; do
+        bashio::log.info "$line"
+    done
 fi
